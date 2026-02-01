@@ -1,4 +1,4 @@
 module "ecr_repo" {
-  source = "../module"
+  source = "../modules/ecr"
   name   = local.repo_name
 }
