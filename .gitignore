@@ -1,4 +1,7 @@
 .terraform/
 **/.terraform/*
 .terragrunt-cache/
-*terraform.tfstate*
+
+# Ignore all Terraform state files everywhere
+*.tfstate
+*.tfstate.*
