@@ -63,3 +63,6 @@ resource "aws_ecs_task_definition" "my_task" {
     }
   ])
 }
+
+
+
