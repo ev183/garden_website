@@ -5,3 +5,6 @@ output "vpc_id" {
 output "subnet_ids" {
   value = values(aws_subnet.subnets)[*].id
 }
+output "app_sg_id" {
+  value = aws_security_group.app_sg.id
+}
