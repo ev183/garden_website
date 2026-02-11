@@ -1,4 +1,5 @@
 .vscode/
+*.vscode/*
 .terraform/
 **/.terraform/*
 .terragrunt-cache/
