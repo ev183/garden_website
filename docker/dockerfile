@@ -1,5 +1,5 @@
-# Use the official Nginx image as the base image
+# Use the official Nginx image for the base image
 FROM nginx:latest
 
 # Copy the static website files (./html) into the Nginx HTML directory
-COPY ./html /usr/share/nginx/html
+COPY ../html /usr/share/nginx/html
