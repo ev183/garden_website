@@ -49,6 +49,9 @@ locals {
     vpc_name = "garden-website-vpc"
     vpc_cidr = "10.0.0.0/16"
     tags     = { Environment = "dev" }
+    igw = {
+      name = "garden-website-igw"
+    }
 
     subnets = {
       public-a = {
@@ -60,7 +63,7 @@ locals {
   }
 
   ecs_cluster = {
-    name = "my-ecs-cluster"
+    name = "garden-website-ecs-cluster"
     tags = { Environment = "dev" }
   }
 
@@ -90,9 +93,10 @@ locals {
     tags                  = { Environment = "dev" }
   }
 
+# Create the ECS service with 0 desired count to prevent immediate task launch
   ecs_service = {
-    name             = "web-service"
-    desired_count    = 1
+    name             = "garden-website-ecs-service"
+    desired_count    = 0
     assign_public_ip = true
     tags             = { Environment = "dev" }
   }
@@ -103,7 +107,7 @@ locals {
 ##################################################################################
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+  name = "garden-ecs-task-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -123,7 +127,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name = "ecsTaskRole"
+  name = "garden-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
