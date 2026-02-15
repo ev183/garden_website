@@ -76,7 +76,7 @@ locals {
 
     container_definitions = jsonencode([{
     name      = "garden-website-container"
-    image     = "${local.ecr_repo_url}:latest"
+    image     = "${local.ecr_repo_url}:v2"
     essential = true
     execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
     task_role_arn      = aws_iam_role.ecs_task_role.arn
