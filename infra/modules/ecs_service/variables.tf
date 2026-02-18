@@ -19,6 +19,32 @@ variable "desired_count" {
   default     = 1
 }
 
+variable "enable_load_balancer" {
+  description = "Whether to attach the service to a load balancer"
+  type        = bool
+  default     = false
+}
+
+
+
+variable "target_group_arn" {
+  description = "ARN of the target group"
+  type        = string
+  default     = null
+}
+
+variable "container_name" {
+  description = "Name of the container to associate with the load balancer"
+  type        = string
+  default     = null
+}
+
+variable "container_port" {
+  description = "Port on the container to associate with the load balancer"
+  type        = number
+  default     = null
+}
+
 variable "subnet_ids" {
   description = "List of subnet IDs for the service"
   type        = list(string)

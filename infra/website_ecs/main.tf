@@ -7,6 +7,15 @@ module "vpc" {
   tags     = local.vpc.tags
 }
 
+module "alb" {
+  source = "../modules/alb"
+  
+  alb_name              = "garden-website-alb"
+  create_security_group = true
+  vpc_id                = module.vpc.vpc_id
+  subnet_ids            = module.vpc.subnet_ids
+}
+
 module "ecs_cluster" {
   source = "../modules/ecs_cluster"
 
@@ -41,6 +50,12 @@ module "ecs_service" {
   desired_count       = local.ecs_service.desired_count
   assign_public_ip    = local.ecs_service.assign_public_ip
 
+  # ALB configuration
+  enable_load_balancer = true
+  target_group_arn     = module.alb.target_group_arn
+  container_name       = "garden-website-container"
+  container_port       = 80
+
   tags = local.ecs_service.tags
 }
 
@@ -57,6 +72,11 @@ locals {
       public-a = {
         cidr_block              = "10.0.8.0/24"
         availability_zone       = "us-east-1a"
+        map_public_ip_on_launch = true
+      }
+      public-b = {
+        cidr_block              = "10.0.9.0/24"
+        availability_zone       = "us-east-1b"
         map_public_ip_on_launch = true
       }
   }
@@ -76,7 +96,7 @@ locals {
 
     container_definitions = jsonencode([{
     name      = "garden-website-container"
-    image     = "${local.ecr_repo_url}:v2"
+    image     = "${local.ecr_repo_url}:v3"
     essential = true
     execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
     task_role_arn      = aws_iam_role.ecs_task_role.arn
@@ -140,5 +160,3 @@ resource "aws_iam_role" "ecs_task_role" {
     }]
   })
 }
-
-

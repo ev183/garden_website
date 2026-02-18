@@ -3,41 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>My Garden Website</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #ccffcc; /* light green */
-            padding: 40px;
-            text-align: center;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px; /* space between images and text */
-        }
-
-        .header-container img {
-            width: 120px;   /* adjust size as needed */
-            height: auto;
-        }
-
-        h1 {
-            color: #333;
-            margin: 0;
-        }
-    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        function GardenWebsite() {
+            const styles = {
+                app: {
+                    minHeight: '100vh',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: '40px'
+                },
+                container: {
+                    background: 'white',
+                    borderRadius: '20px',
+                    padding: '60px',
+                    boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                    textAlign: 'center',
+                    maxWidth: '600px'
+                },
+                header: {
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '20px',
+                    marginBottom: '30px'
+                },
+                title: {
+                    fontSize: '2.5em',
+                    margin: 0,
+                    background: 'linear-gradient(45deg, #667eea, #764ba2)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                },
+                zone: {
+                    fontSize: '1.2em',
+                    color: '#666',
+                    marginTop: '20px'
+                },
+                image: {
+                    width: '80px',
+                    height: 'auto'
+                }
+            };
 
-    <div class="header-container">
-        <img src="minecraft_wheat.png" alt="Left minecraft_wheat">
-        <h1>Welcome to My Garden Website</h1>
-        <img src="minecraft_wheat.png" alt="Right minecraft_wheat">
-    </div>
+            return (
+                <div style={styles.app}>
+                    <div style={styles.container}>
+                        <div style={styles.header}>
+                            <img src="minecraft_wheat.png" alt="Wheat" style={styles.image} className="wheat-float" />
+                            <h1 style={styles.title}>Welcome to My Garden</h1>
+                            <img src="minecraft_wheat.png" alt="Wheat" style={styles.image} className="wheat-float" />
+                        </div>
+                        <p style={styles.zone}>🌱 Growing in Zone 7A 🌱</p>
+                    </div>
+                    <style>{`
+                        @keyframes float {
+                            0%, 100% { transform: translateY(0px); }
+                            50% { transform: translateY(-10px); }
+                        }
+                        .wheat-float {
+                            animation: float 3s ease-in-out infinite;
+                        }
+                    `}</style>
+                </div>
+            );
+        }
 
-    <p>I am located in zone 7A</p>
-
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<GardenWebsite />);
+    </script>
 </body>
 </html>

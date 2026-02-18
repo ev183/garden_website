@@ -11,5 +11,15 @@ resource "aws_ecs_service" "this" {
     assign_public_ip = var.assign_public_ip
   }
 
+  # Conditional load balancer configuration
+  dynamic "load_balancer" {
+    for_each = var.enable_load_balancer ? [1] : []
+    content {
+      target_group_arn = var.target_group_arn
+      container_name   = var.container_name
+      container_port   = var.container_port
+    }
+  }
+
   tags = var.tags
 }
