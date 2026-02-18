@@ -7,14 +7,6 @@ module "vpc" {
   tags     = local.vpc.tags
 }
 
-module "alb" {
-  source = "../modules/alb"
-  
-  alb_name              = "garden-website-alb"
-  create_security_group = true
-  vpc_id                = module.vpc.vpc_id
-  subnet_ids            = module.vpc.subnet_ids
-}
 
 module "ecs_cluster" {
   source = "../modules/ecs_cluster"
@@ -52,7 +44,7 @@ module "ecs_service" {
 
   # ALB configuration
   enable_load_balancer = true
-  target_group_arn     = module.alb.target_group_arn
+  target_group_arn     = dependency.alb.outputs.target_group_arn
   container_name       = "garden-website-container"
   container_port       = 80
 
@@ -116,7 +108,7 @@ locals {
 # Create the ECS service with 0 desired count to prevent immediate task launch
   ecs_service = {
     name             = "garden-website-ecs-service"
-    desired_count    = 0
+    desired_count    = 1
     assign_public_ip = true
     tags             = { Environment = "dev" }
   }
