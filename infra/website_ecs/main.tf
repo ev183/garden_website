@@ -74,6 +74,16 @@ locals {
         availability_zone       = "us-east-1b"
         map_public_ip_on_launch = true
       }
+      private-b = {
+        cidr_block              = "10.0.10.0/24"
+        availability_zone       = "us-east-1b"
+        map_public_ip_on_launch = false
+      }
+      private-d = {
+        cidr_block              = "10.0.11.0/24"
+        availability_zone       = "us-east-1d"
+        map_public_ip_on_launch = false
+      }
   }
   }
 
@@ -112,7 +122,7 @@ locals {
   ecs_service = {
     name             = "garden-website-ecs-service"
     desired_count    = 1
-    assign_public_ip = true
+    assign_public_ip = false
     tags             = { Environment = "dev" }
   }
 }
