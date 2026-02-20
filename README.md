@@ -9,7 +9,11 @@ I have created an ECR repositoy that holds the nginx image for the website. I ha
 
 ## ECS Cluster
 
+Nothing special about it. Just a logical container for my Service/its tasks
+
 ## ECS Service
+
+I chose to create an ECS Service running in Fargate mode to explore a fully serverless setup + only pay for actual task usage instead of paying for EC2 instances.
 
 ## ECS Task
 
