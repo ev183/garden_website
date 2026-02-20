@@ -7,9 +7,11 @@ I have created an ECR repositoy that holds the nginx image for the website. I ha
 2. Then I tag it 'docker tag garden-website-repo:latest 990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo:v2'
 3. Then I push it to my ECR 'docker push 990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo:v2'
 
+My repository also has lifecycle policies in place to archive and eventually delete unused images
+
 ## ECS Cluster
 
-Nothing special about it. Just a logical container for my Service/its tasks
+Nothing special about it. Just a logical container for my Service/its tasks. Not using namespaces or capactiy providers.
 
 ## ECS Service
 
@@ -17,6 +19,6 @@ I chose to create an ECS Service running in Fargate mode to explore a fully serv
 
 ## ECS Task Definition
 
-The task is designed to run on a service with fargate launch type. The task definition is set to use the latest image in my ECR repo. A task's specs are 0.25 vCPU and 512 mb of RAM
+The task is designed to run on a service with a fargate launch type. The task definition is set to use the latest image in my ECR repo. A task's specs are 0.25 vCPU and 512 mb of RAM
 
-## ECS Networking
+## Networking
