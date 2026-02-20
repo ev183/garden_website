@@ -15,6 +15,8 @@ Nothing special about it. Just a logical container for my Service/its tasks
 
 I chose to create an ECS Service running in Fargate mode to explore a fully serverless setup + only pay for actual task usage instead of paying for EC2 instances.
 
-## ECS Task
+## ECS Task Definition
+
+The task is designed to run on a service with fargate launch type. The task definition is set to use the latest image in my ECR repo. A task's specs are 0.25 vCPU and 512 mb of RAM
 
 ## ECS Networking
