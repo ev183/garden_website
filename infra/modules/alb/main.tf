@@ -1,6 +1,8 @@
+# modules/alb/main.tf
+
 # SG for inbound into ALB
 resource "aws_security_group" "alb_sg" {
-  count       = var.create_security_group ? 1 : 0  # ← Creates 1 or 0 SGs
+  count       = var.create_security_group ? 1 : 0
   name        = "${var.alb_name}-sg"
   description = "Security group for ${var.alb_name}"
   vpc_id      = var.vpc_id
@@ -10,6 +12,7 @@ resource "aws_security_group" "alb_sg" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow HTTP from internet"
   }
 
   ingress {
@@ -17,6 +20,7 @@ resource "aws_security_group" "alb_sg" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow HTTPS from internet"
   }
 
   egress {
@@ -24,6 +28,7 @@ resource "aws_security_group" "alb_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound"
   }
 
   tags = {
@@ -36,9 +41,8 @@ resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
 
-  security_groups    = var.create_security_group ? [aws_security_group.alb_sg[0].id] : var.security_group_ids
-  
-  subnets            = var.subnet_ids
+  security_groups = var.create_security_group ? [aws_security_group.alb_sg[0].id] : var.security_group_ids
+  subnets         = var.subnet_ids
 
   tags = {
     Environment = "production"
@@ -51,7 +55,7 @@ resource "aws_lb_target_group" "main" {
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip"  # ← Important for ECS tasks (Fargate/awsvpc mode)
+  target_type = "ip"
 
   health_check {
     enabled             = true
@@ -59,12 +63,12 @@ resource "aws_lb_target_group" "main" {
     unhealthy_threshold = 2
     timeout             = 5
     interval            = 30
-    path                = "/"  # nginx default health check path
+    path                = "/"
     protocol            = "HTTP"
     matcher             = "200"
   }
 
-  deregistration_delay = 30  # Faster draining for containers
+  deregistration_delay = 30
 
   tags = {
     Name        = "${var.alb_name}-tg"
@@ -72,11 +76,43 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
-# Listener on port 80
+# HTTP Listener - Redirect to HTTPS if enabled, otherwise forward
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.alb.arn
   port              = "80"
   protocol          = "HTTP"
+
+  default_action {
+    type = var.enable_https ? "redirect" : "forward"
+
+    # Redirect to HTTPS
+    dynamic "redirect" {
+      for_each = var.enable_https ? [1] : []
+      content {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
+
+    # Forward to target group if no HTTPS
+    target_group_arn = var.enable_https ? null : aws_lb_target_group.main.arn
+  }
+
+  tags = {
+    Environment = "production"
+  }
+}
+
+# HTTPS Listener - Only created if HTTPS is enabled
+resource "aws_lb_listener" "https" {
+  count = var.enable_https ? 1 : 0
+
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"

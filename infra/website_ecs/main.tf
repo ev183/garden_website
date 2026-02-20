@@ -29,6 +29,10 @@ module "ecs_task" {
   tags = local.ecs_task.tags
 }
 
+data "aws_lb_target_group" "alb" {
+  name = "garden-website-alb-tg"
+}
+
 module "ecs_service" {
   source = "../modules/ecs_service"
 
@@ -44,7 +48,7 @@ module "ecs_service" {
 
   # ALB configuration
   enable_load_balancer = true
-  target_group_arn     = dependency.alb.outputs.target_group_arn
+  target_group_arn      = data.aws_lb_target_group.alb.arn
   container_name       = "garden-website-container"
   container_port       = 80
 

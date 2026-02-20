@@ -25,3 +25,17 @@ variable "subnet_ids" {
   description = "List of subnet IDs for the ALB"
   type        = list(string)
 }
+
+# modules/alb/variables.tf
+
+variable "certificate_arn" {
+  description = "ARN of ACM certificate for HTTPS"
+  type        = string
+  default     = null
+}
+
+variable "enable_https" {
+  description = "Enable HTTPS listener"
+  type        = bool
+  default     = false
+}
