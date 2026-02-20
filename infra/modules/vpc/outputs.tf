@@ -12,3 +12,23 @@ output "subnet_ids" {
 output "app_sg_id" {
   value = aws_security_group.app_sg.id
 }
+
+output "vpc_endpoint_ecr_api_id" {
+  description = "ID of ECR API VPC endpoint"
+  value       = aws_vpc_endpoint.ecr_api.id
+}
+
+output "vpc_endpoint_ecr_dkr_id" {
+  description = "ID of ECR Docker VPC endpoint"
+  value       = aws_vpc_endpoint.ecr_dkr.id
+}
+
+output "vpc_endpoint_s3_id" {
+  description = "ID of S3 VPC endpoint"
+  value       = aws_vpc_endpoint.s3.id
+}
+
+output "private_route_table_id" {
+  description = "ID of the private route table"
+  value       = aws_route_table.private.id
+}

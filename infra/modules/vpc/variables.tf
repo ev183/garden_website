@@ -20,3 +20,9 @@ variable "subnets" {
     tags                    = optional(map(string))
   }))
 }
+
+variable "aws_region" {
+  description = "AWS region for VPC endpoints"
+  type        = string
+  default     = "us-east-1"
+}
