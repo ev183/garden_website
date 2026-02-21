@@ -27,22 +27,15 @@ jobs:
           --query 'length(taskArns)' \
           --output text)
 
-    echo "Running tasks: $COUNT"
-    echo "count=$COUNT" >> $GITHUB_OUTPUT
+    - name: Destroy running ECS tasks
+      if: ${{ steps.ecs_tasks.outputs.count != '0' }}
+      run: |
+        echo "Setting desired count to 0..."
+        aws ecs update-service \
+          --cluster ${{ secrets.ECS_CLUSTER }} \
+          --service ${{ secrets.ECS_SERVICE }} \
+          --desired-count 0
 
-
-          echo "Running tasks: $COUNT"
-          echo "count=$COUNT" >> $GITHUB_OUTPUT
-
-      - name: Force new ECS deployment
-        if: ${{ steps.ecs_tasks.outputs.count != '0' }}
-        run: |
-          echo "Setting desired count to 0..."
-          aws ecs update-service \
-            --cluster ${{ secrets.ECS_CLUSTER }} \
-            --service ${{ secrets.ECS_SERVICE }} \
-            --desired-count 0
-
-      - name: Skip deployment (no running tasks)
-        if: ${{ steps.ecs_tasks.outputs.count == '0' }}
-        run: echo "No running tasks — skipping task destruction."
+    - name: Skip deployment (no running tasks)
+      if: ${{ steps.ecs_tasks.outputs.count == '0' }}
+      run: echo "No running tasks — skipping task destruction."
