@@ -1,0 +1,43 @@
+name: Destroy running ECS tasks
+
+# Runs every day at 3:00 AM UTC and can also be triggered manually via the GitHub UI
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  destroy-tasks:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+
+      - name: Check running ECS tasks
+        id: ecs_tasks
+        run: |
+          COUNT=$(aws ecs list-tasks \
+            --cluster ${{ secrets.ECS_CLUSTER }} \
+            --service-name ${{ secrets.ECS_SERVICE }} \
+            --desired-status RUNNING \
+            --query 'length(taskArns)' \
+            --output text)
+
+          echo "Running tasks: $COUNT"
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: Force new ECS deployment
+        if: ${{ steps.ecs_tasks.outputs.count != '0' }}
+        run: |
+          echo "Setting desired count to 0..."
+          aws ecs update-service \
+            --cluster ${{ secrets.ECS_CLUSTER }} \
+            --service ${{ secrets.ECS_SERVICE }} \
+            --desired-count 0
+
+      - name: Skip deployment (no running tasks)
+        if: ${{ steps.ecs_tasks.outputs.count == '0' }}
+        run: echo "No running tasks — skipping task destruction."
