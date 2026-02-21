@@ -1,3 +1,5 @@
+name: Build, Push, and Deploy to ECS
+
 on:
   schedule:
     - cron: "0 3 * * *"
