@@ -74,14 +74,14 @@ locals {
         availability_zone       = "us-east-1b"
         map_public_ip_on_launch = true
       }
-      private-b = {
+      private-a = {
         cidr_block              = "10.0.10.0/24"
-        availability_zone       = "us-east-1b"
+        availability_zone       = "us-east-1a"
         map_public_ip_on_launch = false
       }
-      private-d = {
+      private-b = {
         cidr_block              = "10.0.11.0/24"
-        availability_zone       = "us-east-1d"
+        availability_zone       = "us-east-1b"
         map_public_ip_on_launch = false
       }
   }
@@ -101,7 +101,7 @@ locals {
 
     container_definitions = jsonencode([{
     name      = "garden-website-container"
-    image     = "${local.ecr_repo_url}:v3"
+    image     = "${local.ecr_repo_url}:latest"
     essential = true
     execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
     task_role_arn      = aws_iam_role.ecs_task_role.arn

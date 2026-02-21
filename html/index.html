@@ -3,83 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>My Garden Website</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        function GardenWebsite() {
-            const styles = {
-                app: {
-                    minHeight: '100vh',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: '40px'
-                },
-                container: {
-                    background: 'white',
-                    borderRadius: '20px',
-                    padding: '60px',
-                    boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-                    textAlign: 'center',
-                    maxWidth: '600px'
-                },
-                header: {
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '20px',
-                    marginBottom: '30px'
-                },
-                title: {
-                    fontSize: '2.5em',
-                    margin: 0,
-                    background: 'linear-gradient(45deg, #667eea, #764ba2)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                },
-                zone: {
-                    fontSize: '1.2em',
-                    color: '#666',
-                    marginTop: '20px'
-                },
-                image: {
-                    width: '80px',
-                    height: 'auto'
-                }
-            };
 
-            return (
-                <div style={styles.app}>
-                    <div style={styles.container}>
-                        <div style={styles.header}>
-                            <img src="minecraft_wheat.png" alt="Wheat" style={styles.image} className="wheat-float" />
-                            <h1 style={styles.title}>Welcome to My Garden</h1>
-                            <img src="minecraft_wheat.png" alt="Wheat" style={styles.image} className="wheat-float" />
-                        </div>
-                        <p style={styles.zone}>🌱 Growing in Zone 7A 🌱</p>
-                    </div>
-                    <style>{`
-                        @keyframes float {
-                            0%, 100% { transform: translateY(0px); }
-                            50% { transform: translateY(-10px); }
-                        }
-                        .wheat-float {
-                            animation: float 3s ease-in-out infinite;
-                        }
-                    `}</style>
-                </div>
-            );
-        }
+<div class="container">
+    <div class="header">
+        <img src="minecraft_wheat.png" class="wheat-float" width="80">
+        <h1 class="title">Welcome to My Garden</h1>
+        <img src="minecraft_wheat.png" class="wheat-float" width="80">
+    </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<GardenWebsite />);
-    </script>
+    <p id="zoneText">
+        🌱 Growing in Zone <span id="zoneValue">7A</span> 🌱
+    </p>
+
+    <button class="toggle-btn" onclick="toggleZone()">Toggle Zone</button>
+</div>
+
+<!-- External JS -->
+<script src="script.js"></script>
+
 </body>
 </html>
