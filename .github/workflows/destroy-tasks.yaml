@@ -1,6 +1,5 @@
 name: Destroy running ECS tasks
 
-# Runs every day at 3:00 AM UTC and can also be triggered manually via the GitHub UI
 on:
   schedule:
     - cron: "0 * * * *"

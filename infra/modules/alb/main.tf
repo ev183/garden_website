@@ -1,5 +1,3 @@
-# modules/alb/main.tf
-
 # SG for inbound into ALB
 resource "aws_security_group" "alb_sg" {
   count       = var.create_security_group ? 1 : 0
@@ -36,11 +34,14 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+# Create the ALB and related resources for each ALB defined in the local.albs map
+# We use a for_each loop to iterate over the map and create resources for each ALB
 resource "aws_lb" "alb" {
   name               = var.alb_name
   internal           = false
   load_balancer_type = "application"
-
+  
+  # We use the security group we just created if create_security_group is true, otherwise we use the provided security group IDs
   security_groups = var.create_security_group ? [aws_security_group.alb_sg[0].id] : var.security_group_ids
   subnets         = var.subnet_ids
 
@@ -49,7 +50,8 @@ resource "aws_lb" "alb" {
   }
 }
 
-# Target Group
+# Create target group and listeners for each ALB
+# We use conditional logic to create the HTTPS listener only if enable_https is true, and to redirect HTTP to HTTPS if enable_https is true
 resource "aws_lb_target_group" "main" {
   name        = "${var.alb_name}-tg"
   port        = 80
