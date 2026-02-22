@@ -1,5 +1,8 @@
 # Website for garden hosted on ECS - Fargate
 
+## CI/CD Workflow
+I have a github action that builds a new image and tags it with latest and my commit hash --> pushes it to my ECR --> Updates my ECS Service task definition to use that latest image. 
+
 ## Docker + ECR Repository
 I have created an ECR repositoy that holds the nginx image for the website. I have a dockerfile that creates the image and it is then pushed to the ECR repository. 
 
