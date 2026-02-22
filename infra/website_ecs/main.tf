@@ -99,21 +99,19 @@ locals {
     cpu                   = 256
     memory                = 512
 
-    container_definitions = jsonencode([{
-    name      = "garden-website-container"
-    image     = "${local.ecr_repo_url}:latest"
-    essential = true
-    execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
-    task_role_arn      = aws_iam_role.ecs_task_role.arn
-    portMappings = [
-      {
-        containerPort = 80      
-        hostPort      = 80
-        protocol      = "tcp"
-      }
-    ]
-  }
-])
+    container_definitions = replace(
+      replace(
+        replace(
+          file("${path.module}/container-definitions.json"),
+          "REPLACE_IMAGE_URI",
+          "${local.ecr_repo_url}:latest"
+        ),
+        "REPLACE_EXECUTION_ROLE_ARN",
+        aws_iam_role.ecs_task_execution_role.arn
+      ),
+      "REPLACE_TASK_ROLE_ARN",
+      aws_iam_role.ecs_task_role.arn
+    )
 
     tags                  = { Environment = "dev" }
   }
