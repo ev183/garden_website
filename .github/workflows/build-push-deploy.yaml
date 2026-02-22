@@ -33,6 +33,7 @@ jobs:
         run: |
           docker build -f docker/dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:COMMIT_SHA .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA
 
       # -------------------------------
       # NEW: Check running ECS tasks
