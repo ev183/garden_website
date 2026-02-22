@@ -35,38 +35,18 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA
 
-      # -------------------------------
-      # NEW: Check running ECS tasks
-      # -------------------------------
-      - name: Check running ECS tasks
-        id: ecs_tasks
-        run: |
-          COUNT=$(aws ecs list-tasks \
-            --cluster ${{ secrets.ECS_CLUSTER }} \
-            --service-name ${{ secrets.ECS_SERVICE }} \
-            --desired-status RUNNING \
-            --query 'length(taskArns)' \
-            --output text)
+      - name: Render new task definition
+        id: render-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: taskdef.json
+          container-name: garden-website-container
+          image: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
 
-          echo "Running tasks: $COUNT"
-          echo "count=$COUNT" >> $GITHUB_OUTPUT
-
-      # ---------------------------------------------
-      # NEW: Only deploy if running task count != 0
-      # ---------------------------------------------
-      - name: Force new ECS deployment
-        run: |
-          echo "Forcing new ECS deployment..."
-          aws ecs update-service \
-            --cluster ${{ secrets.ECS_CLUSTER }} \
-            --service ${{ secrets.ECS_SERVICE }} \
-            --force-new-deployment
-
-      - name: Create ECS tasks
-        if: ${{ steps.ecs_tasks.outputs.count != '0' }}
-        run: |
-          echo "Setting desired count to 1..."
-          aws ecs update-service \
-            --cluster ${{ secrets.ECS_CLUSTER }} \
-            --service ${{ secrets.ECS_SERVICE }} \
-            --desired-count 1
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          service: ${{ secrets.ECS_SERVICE }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
+          wait-for-service-stability: true
