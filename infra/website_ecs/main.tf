@@ -1,3 +1,4 @@
+# Use the VPC module to create the VPC and subnets
 module "vpc" {
   source = "../modules/vpc"
 
@@ -7,6 +8,7 @@ module "vpc" {
   tags     = local.vpc.tags
 }
 
+# Use the ecs_cluster module to create the ECS cluster
 module "ecs_cluster" {
   source = "../modules/ecs_cluster"
 
@@ -14,6 +16,7 @@ module "ecs_cluster" {
   tags         = local.ecs_cluster.tags
 }
 
+# Use the ecs_task module to create the ECS task definition
 module "ecs_task" {
   source = "../modules/ecs_task"
 
@@ -28,10 +31,12 @@ module "ecs_task" {
   tags = local.ecs_task.tags
 }
 
+# Reference the ALB target group to get its ARN for use in the ECS service
 data "aws_lb_target_group" "alb" {
   name = "garden-website-alb-tg"
 }
 
+# Use the ecs_service module to create the ECS service and link it to the ALB target group
 module "ecs_service" {
   source = "../modules/ecs_service"
 
@@ -39,7 +44,7 @@ module "ecs_service" {
   cluster_arn         = module.ecs_cluster.cluster_arn
   task_definition_arn = module.ecs_task.task_definition_arn
 
-  subnet_ids          = module.vpc.subnet_ids
+  subnet_ids          = module.vpc.private_subnet_ids  # ← Changed to private subnets
   security_group_ids  = [module.vpc.app_sg_id]
 
   desired_count       = local.ecs_service.desired_count
@@ -47,7 +52,7 @@ module "ecs_service" {
 
   # ALB configuration
   enable_load_balancer = true
-  target_group_arn      = data.aws_lb_target_group.alb.arn
+  target_group_arn     = data.aws_lb_target_group.alb.arn
   container_name       = "garden-website-container"
   container_port       = 80
 
@@ -59,10 +64,6 @@ locals {
     vpc_name = "garden-website-vpc"
     vpc_cidr = "10.0.0.0/16"
     tags     = { Environment = "dev" }
-    igw = {
-      name = "garden-website-igw"
-    }
-
     subnets = {
       public-a = {
         cidr_block              = "10.0.8.0/24"
@@ -84,7 +85,7 @@ locals {
         availability_zone       = "us-east-1b"
         map_public_ip_on_launch = false
       }
-  }
+    }
   }
 
   ecs_cluster = {
@@ -94,29 +95,31 @@ locals {
 
   ecr_repo_url = "990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo"
 
+  # Define container definitions inline (no file needed)
   ecs_task = {
-    family                = "garden-website-task"
-    cpu                   = 256
-    memory                = 512
+    family = "garden-website-task"
+    cpu    = "256"
+    memory = "512"
 
-    container_definitions = replace(
-      replace(
-        replace(
-          file("${path.module}/container-definitions.json"),
-          "REPLACE_IMAGE_URI",
-          "${local.ecr_repo_url}:latest"
-        ),
-        "REPLACE_EXECUTION_ROLE_ARN",
-        aws_iam_role.ecs_task_execution_role.arn
-      ),
-      "REPLACE_TASK_ROLE_ARN",
-      aws_iam_role.ecs_task_role.arn
-    )
+    container_definitions = jsonencode([
+      {
+        name      = "garden-website-container"
+        image     = "${local.ecr_repo_url}:latest"
+        cpu       = 0
+        essential = true
+        portMappings = [
+          {
+            containerPort = 80
+            hostPort      = 80
+            protocol      = "tcp"
+          }
+        ]
+      }
+    ])
 
-    tags                  = { Environment = "dev" }
+    tags = { Environment = "dev" }
   }
 
-# Create the ECS service with 0 desired count to prevent immediate task launch
   ecs_service = {
     name             = "garden-website-ecs-service"
     desired_count    = 1
@@ -126,7 +129,8 @@ locals {
 }
 
 #################################################################################
-##################################################################################
+# IAM ROLES
+#################################################################################
 
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "garden-ecs-task-execution-role"

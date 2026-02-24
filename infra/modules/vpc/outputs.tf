@@ -32,3 +32,21 @@ output "private_route_table_id" {
   description = "ID of the private route table"
   value       = aws_route_table.private.id
 }
+
+output "private_subnet_ids" {
+  description = "IDs of private subnets"
+  value = [
+    for name, subnet in aws_subnet.subnets :
+    subnet.id
+    if !lookup(var.subnets[name], "map_public_ip_on_launch", false)
+  ]
+}
+
+output "public_subnet_ids" {
+  description = "IDs of public subnets"
+  value = [
+    for name, subnet in aws_subnet.subnets :
+    subnet.id
+    if lookup(var.subnets[name], "map_public_ip_on_launch", false)
+  ]
+}

@@ -1,49 +1,4 @@
-# infra/website_alb/main.tf
-
-# ============================================================================
-# DATA SOURCES
-# ============================================================================
-
-# Reference my public subnets
-data "aws_subnet" "public_subnet_1" {
-  id = "subnet-08ec88c94e17ac644"
-}
-
-data "aws_subnet" "public_subnet_2" {
-  id = "subnet-05526a93a1e603e8f"
-}
-
-# ============================================================================
-# LOCALS - CONFIGURATION
-# ============================================================================
-
-locals {
-  albs = {
-    garden_website = {
-      name                  = "garden-website-alb"
-      create_security_group = true
-      subnets = [
-        data.aws_subnet.public_subnet_1.id,
-        data.aws_subnet.public_subnet_2.id
-      ]
-      vpc_id = data.aws_subnet.public_subnet_1.vpc_id
-      
-      # HTTPS configuration - ADD YOUR CERTIFICATE ARN HERE
-      enable_https    = true
-      certificate_arn = "arn:aws:acm:us-east-1:990991767208:certificate/811852f9-8e0a-45c9-a880-d21cdc265336"
-      
-      tags = {
-        Environment = "production"
-        Project     = "garden-website"
-      }
-    }
-  }
-}
-
-# ============================================================================
-# MODULE - ALB
-# ============================================================================
-
+# Call the alb module
 module "alb" {
   for_each = local.albs
   source   = "../modules/alb"
@@ -56,6 +11,39 @@ module "alb" {
   # HTTPS configuration
   enable_https    = lookup(each.value, "enable_https", false)
   certificate_arn = lookup(each.value, "certificate_arn", null)
+}
+
+# Reference my public subnets that have been created in the VPC module, so we can use them for the ALB subnets
+data "aws_subnet" "public_subnet_1" {
+  id = "subnet-08ec88c94e17ac644"
+}
+
+data "aws_subnet" "public_subnet_2" {
+  id = "subnet-05526a93a1e603e8f"
+}
+
+locals {
+  # Map of ALBs to create, with keys as ALB names and values as ALB configuration
+  albs = {
+    garden_website = {
+      name                  = "garden-website-alb"
+      create_security_group = true
+      subnets = [
+        data.aws_subnet.public_subnet_1.id,
+        data.aws_subnet.public_subnet_2.id
+      ]
+      vpc_id = data.aws_subnet.public_subnet_1.vpc_id
+      
+      # HTTPS configuration - Specify cert I requested from ACM.
+      enable_https    = true
+      certificate_arn = "arn:aws:acm:us-east-1:990991767208:certificate/811852f9-8e0a-45c9-a880-d21cdc265336"
+      
+      tags = {
+        Environment = "production"
+        Project     = "garden-website"
+      }
+    }
+  }
 }
 
 # ============================================================================

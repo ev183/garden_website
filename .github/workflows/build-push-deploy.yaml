@@ -1,14 +1,20 @@
 name: Build, Push, and Deploy to ECS
 
-# Run on every push to main and allow manual triggering via the GitHub UI
 on:
   push:
     branches:
       - main
   workflow_dispatch:
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: garden-website-repo
+  ECS_SERVICE: garden-website-ecs-service
+  ECS_CLUSTER: garden-website-ecs-cluster
+  ECS_TASK_FAMILY: garden-website-task
+  CONTAINER_NAME: garden-website-container
+
 jobs:
-  # Right now everything is in one job, but we could split this into separate build/push and deploy jobs in the future if desired
   build-push-deploy:
     runs-on: ubuntu-latest
 
@@ -17,51 +23,58 @@ jobs:
       contents: read
 
     steps:
-      # First step is to checkout the code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Then we configure AWS credentials using OIDC, which allows us to securely access AWS without storing long-lived secrets in GitHub
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      # Login to Amazon ECR so we can push our Docker image to the registry
       - name: Login to Amazon ECR
+        id: ecr-login
         uses: aws-actions/amazon-ecr-login@v2
 
-      # I want to tag with the short hash for easier identification in ECR, so we set that as an environment variable here
       - name: Set short SHA
         run: echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
-      # Build the Docker image, tag it with both "latest" and the short commit SHA, and push both tags to ECR
       - name: Build, tag, and push image
         env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          LATEST_TAG: latest
-          COMMIT_SHA: ${{ env.SHORT_SHA }}
-
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG_LATEST: ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+          IMAGE_TAG_SHA: ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          IMAGE_TAG_SHORT: ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.SHORT_SHA }}
         run: |
-          docker build -f docker/dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA
+          docker build \
+            -f docker/dockerfile \
+            -t $IMAGE_TAG_LATEST \
+            -t $IMAGE_TAG_SHA \
+            -t $IMAGE_TAG_SHORT \
+            .
+          
+          docker push $IMAGE_TAG_LATEST
+          docker push $IMAGE_TAG_SHA
+          docker push $IMAGE_TAG_SHORT
 
-      # After pushing the new image, we need to update our ECS service to use the new image. We do this by rendering a new task definition with the updated image URI and then deploying that task definition to our ECS service.
-      - name: Render new task definition
+      - name: Download current task definition from AWS
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.ECS_TASK_FAMILY }} \
+            --query taskDefinition > task-definition.json
+
+      - name: Update task definition with new image
         id: render-task
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: infra/website_ecs/container-definitions.json
-          container-name: garden-website-container
-          image: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+          task-definition: task-definition.json
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
 
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.render-task.outputs.task-definition }}
-          service: ${{ secrets.ECS_SERVICE }}
-          cluster: ${{ secrets.ECS_CLUSTER }}
-          wait-for-service-stability: false
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

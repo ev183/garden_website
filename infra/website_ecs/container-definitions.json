@@ -1,3 +1,4 @@
+[
 {
     "taskDefinitionArn": "arn:aws:ecs:us-east-1:990991767208:task-definition/garden-website-task:4",
     "containerDefinitions": [
@@ -52,8 +53,8 @@
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "cpu": "256",
-    "memory": "512",
+    "cpu": 256,
+    "memory": 512,
     "registeredAt": "2026-02-21T00:18:02.234Z",
     "registeredBy": "arn:aws:iam::990991767208:user/evaning",
     "tags": [
@@ -63,3 +64,4 @@
         }
     ]
 }
+]
