@@ -23,6 +23,7 @@ jobs:
 
     - name: Check running ECS tasks
       id: ecs_tasks
+
       run: |
         COUNT=$(aws ecs list-tasks \
           --cluster ${{ secrets.ECS_CLUSTER }} \
@@ -31,6 +32,7 @@ jobs:
           --region ${{ secrets.AWS_REGION }} \
           --query 'length(taskArns)' \
           --output text)
+        echo "count=$COUNT" >> $GITHUB_OUTPUT
 
     - name: Destroy running ECS tasks
       if: ${{ steps.ecs_tasks.outputs.count != '0' }}

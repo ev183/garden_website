@@ -3,6 +3,7 @@
 .terraform/
 **/.terraform/*
 .terragrunt-cache/
+values.yaml
 
 # Ignore all Terraform state files everywhere
 *.tfstate
