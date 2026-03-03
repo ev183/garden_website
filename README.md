@@ -1,27 +1,30 @@
 # Website for garden hosted on ECS - Fargate
 
 ## CI/CD Workflow
-I have a github action that builds a new image and tags it with latest and my commit hash --> pushes it to my ECR --> Updates my ECS Service task definition to use that latest image. 
+I have a github action that builds a new image and tags it with latest and my commit hash (shortened to 7 characters) --> pushes it to my ECR --> Updates my ECS Service task definition to use that latest image. 
+
+## GitHub Runners
+Instead of relying on GitHub-managed runners, I've implemented self-hosted runners using k3d clusters on my local machine. GitHub Actions Runner Controller (ARC), deployed via the official Helm chart, ensures a runner pod is always available for pipeline execution.
+
+## Website design
+As for my website, I heavily relied on Claude to build out the design. It utilized HTML, CSS, and JavaScript. 
 
 ## Docker + ECR Repository
-I have created an ECR repositoy that holds the nginx image for the website. I have a dockerfile that creates the image and it is then pushed to the ECR repository. 
+I have created an ECR repository that holds the nginx image for the website. I have a dockerfile that creates the image and it is then pushed to the ECR repository.
 
-1. I run 'docker build -t garden-website-repo -f docker/Dockerfile .' to build the latest image.
-2. Then I tag it 'docker tag garden-website-repo:latest 990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo:v2'
-3. Then I push it to my ECR 'docker push 990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo:v2'
+```bash
+docker build -t garden-website-repo -f docker/Dockerfile .
+docker tag garden-website-repo:latest 990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo:v2
+docker push 990991767208.dkr.ecr.us-east-1.amazonaws.com/garden-website-repo:v2
+```
 
 My repository also has lifecycle policies in place to archive and eventually delete unused images
 
 ## ECS Cluster
-
-Nothing special about it. Just a logical container for my Service/its tasks. Not using namespaces or capactiy providers.
+Nothing special about it. Just a logical container for my Service/its tasks. Not using namespaces or capacity providers.
 
 ## ECS Service
-
 I chose to create an ECS Service running in Fargate mode to explore a fully serverless setup + only pay for actual task usage instead of paying for EC2 instances.
 
 ## ECS Task Definition
-
 The task is designed to run on a service with a fargate launch type. The task definition is set to use the latest image in my ECR repo. A task's specs are 0.25 vCPU and 512 mb of RAM
-
-## Networking
