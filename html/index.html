@@ -2,35 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Garden Website</title>
-
-    <!-- External CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Garden Journal | Zone 7A</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>🌱 My Garden Journal</h1>
+                <p class="subtitle">Growing in Zone 7A</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#weeks">Weekly Updates</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<div class="container">
-    <div class="header">
-        <img src="minecraft_wheat.png" class="wheat-float" width="80">
-        <h1 class="title">Welcome to My Garden</h1>
-        <img src="minecraft_wheat.png" class="wheat-float" width="80">
+    <main>
+        <section id="hero" class="hero">
+            <div class="container">
+                <h2>Welcome to My Garden</h2>
+                <p>Follow along as I document my gardening journey, week by week.</p>
+            </div>
+        </section>
+
+        <section id="weeks" class="weeks-section">
+            <div class="container">
+                <h2 class="section-title">Weekly Journal</h2>
+                
+                <!-- Week entries will be dynamically inserted here -->
+                <div id="week-entries" class="week-grid">
+                    <!-- JavaScript will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="container">
+                <h2 class="section-title">About This Garden</h2>
+                <div class="about-content">
+                    <p>This is my journey growing vegetables and flowers in Zone 7A. I'm documenting everything from seed starting to harvest, sharing what works (and what doesn't!).</p>
+                    <div class="garden-stats">
+                        <div class="stat">
+                            <h3 id="week-count">0</h3>
+                            <p>Weeks Growing</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Zone 7A</h3>
+                            <p>Growing Zone</p>
+                        </div>
+                        <div class="stat">
+                            <h3 id="plant-count">0</h3>
+                            <p>Plants Started</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 My Garden Journal. Growing things, one week at a time. 🌿</p>
+        </div>
+    </footer>
+
+    <!-- Modal for week details -->
+    <div id="week-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body">
+                <!-- Week details will be inserted here -->
+            </div>
+        </div>
     </div>
 
-    <p id="zoneText">
-        🌱 Growing in Zone <span id="zoneValue">7A</span> 🌱
-    </p>
-
-    <button class="toggle-btn" onclick="toggleZone()">Toggle Zone</button>
-</div>
-
-<!-- my external javascript file -->
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
-<nav>
-    <ul>
-        <li><a href="2026.html">2026</a></li>
-    </ul>
-</nav>
 </html>
