@@ -24,6 +24,24 @@ const weekData = [
     }
 ];
 
+const lessonsData = [
+    {
+        id: 1,
+        title: "Soil Quality Matters",
+        content: "The right soil mix is the foundation for healthy plants. A good balance of moisture retention and drainage prevents both drought stress and root rot."
+    },
+    {
+        id: 2,
+        title: "Start Seeds Early",
+        content: "Give yourself plenty of time for seed starting indoors. Tomatoes need 6-8 weeks before transplanting, so plan ahead for your local frost dates."
+    },
+    {
+        id: 3,
+        title: "Consistent Temperature Control",
+        content: "Using a heat mat for seed germination ensures consistent temperatures, leading to better germination rates and stronger seedlings."
+    }
+];
+
 // ===========================
 // DOM Elements
 // ===========================
@@ -41,6 +59,7 @@ const plantCountElement = document.getElementById('plant-count');
 
 document.addEventListener('DOMContentLoaded', () => {
     renderWeekCards();
+    renderLessonCards();
     updateStats();
     setupEventListeners();
     setupSmoothScrolling();
@@ -80,6 +99,36 @@ function createWeekCard(week) {
         e.preventDefault();
         openModal(week);
     });
+    
+    return card;
+}
+
+// ===========================
+// Render Lesson Cards
+// ===========================
+
+function renderLessonCards() {
+    const lessonsContainer = document.getElementById('lessons-entries');
+    lessonsContainer.innerHTML = '';
+    
+    lessonsData.forEach(lesson => {
+        const card = createLessonCard(lesson);
+        lessonsContainer.appendChild(card);
+    });
+}
+
+// ===========================
+// Create Lesson Card
+// ===========================
+
+function createLessonCard(lesson) {
+    const card = document.createElement('div');
+    card.className = 'lesson-card';
+    
+    card.innerHTML = `
+        <div class="lesson-title">${lesson.title}</div>
+        <div class="lesson-content">${lesson.content}</div>
+    `;
     
     return card;
 }
@@ -222,7 +271,8 @@ function setupScrollHighlighting() {
 function highlightActiveSection() {
     const sections = [
         { id: 'hero', navHref: '#home' },
-        { id: 'weeks', navHref: '#weeks' }
+        { id: 'weeks', navHref: '#weeks' },
+        { id: 'Lessons', navHref: '#Lessons' }
     ];
     
     let activeSection = null;
