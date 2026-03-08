@@ -1,7 +1,7 @@
 # Website for garden hosted on ECS - Fargate
 
 ## CI/CD Workflow
-I have a github action that builds a new image and tags it with latest and my commit hash (shortened to 7 characters) --> pushes it to my ECR --> Updates my ECS Service task definition to use that latest image. 
+Everytime I push code to main, I have a github action that builds a new image and tags it with latest and my commit hash (shortened to 7 characters). It pushes the image to my ECR. Then my ECS Service task definition is revised to use that latest image. Also, if not already done so, my ECS Service desired task count is set to 1. 
 
 ## GitHub Runners
 Instead of relying on GitHub-managed runners, I've implemented self-hosted runners using k3d clusters on my local machine. GitHub Actions Runner Controller (ARC), deployed via the official Helm chart, ensures a runner pod is always available for pipeline execution.
