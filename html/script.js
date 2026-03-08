@@ -25,27 +25,6 @@ const weekData = [
             <h3>Setup</h3>
             <p>Placed seed trays on a heat mat set to 75°F to encourage germination.</p>
         `
-        ////////////////
-        ,date: "March 10th, 2026",
-        content: `
-            <h3>Cherry tomato - Seed Preparation</h3>
-            <p>I'm starting with tomatoes since they need a 6-8 week head start before transplanting outdoors in mid-April (Early May?).</p>
-            
-            <h3>The soil mix I used</h3>
-            <ul>
-                <li>70% Coco coir</li>
-                <li>20% Perlite for drainage</li>
-                <li>10% Worm castings for gentle nutrients</li>
-            </ul>
-            
-            <h3>What I planted</h3>
-            <ul>
-                <li>'Red Cherry' tomatoes (37 cells)</li>
-            </ul>
-            
-            <h3>Setup</h3>
-            <p>Placed seed trays on a heat mat set to 75°F to encourage germination.</p>
-        `
     }
 ];
 

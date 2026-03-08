@@ -2,7 +2,8 @@ name: Destroy running ECS tasks
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    # Minute 0, hour 2, every day (aka 2:00 AM daily)
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 jobs:
