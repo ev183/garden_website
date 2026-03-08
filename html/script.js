@@ -5,8 +5,8 @@
 const weekData = [
     {
         week: 1,
-        date: "February 25, 2025",
-        title: "Starting the Journey - Seed Preparation",
+        date: "March 7th, 2025",
+        title: "First Week of Seed Starting 🌱",
         summary: "Prepared soil mix with coco coir, perlite, and worm castings. Started tomato seeds indoors under grow lights.",
         content: `
             <h3>What I Did This Week</h3>
@@ -14,79 +14,20 @@ const weekData = [
             
             <h3>Soil Mix Recipe</h3>
             <ul>
-                <li>50% Coco coir (rinsed to remove salts)</li>
-                <li>30% Perlite for drainage</li>
-                <li>20% Worm castings for gentle nutrients</li>
+                <li>70% Coco coir</li>
+                <li>20% Perlite (for drainage)</li>
+                <li>10% Worm castings for gentle nutrients. In a few weeks will add a liquid fertilizer.</li>
             </ul>
             
             <h3>Seeds Started</h3>
             <ul>
-                <li>Cherokee Purple tomatoes (6 cells)</li>
-                <li>San Marzano tomatoes (6 cells)</li>
-                <li>Cherry tomatoes - Sungold (4 cells)</li>
+                <li>Cherry tomatoes (37 cells)</li>
             </ul>
             
             <h3>Setup</h3>
-            <p>Placed seed trays on a heat mat set to 75°F to encourage germination. Using LED grow lights on a 16-hour timer, positioned about 3 inches above the trays.</p>
-            
-            <h3>Next Week's Goals</h3>
-            <ul>
-                <li>Watch for germination (should be 5-10 days)</li>
-                <li>Remove humidity dome once seeds sprout</li>
-                <li>Keep soil moist but not waterlogged</li>
-            </ul>
+            <p>Placed seed trays on a heat mat set to 75°F to encourage germination.</p>
         `,
         tags: ["Tomatoes", "Seed Starting", "Indoor Growing"]
-    },
-    {
-        week: 2,
-        date: "March 4, 2025",
-        title: "First Sprouts! 🌱",
-        summary: "Tomato seedlings are up! Removed humidity domes and adjusted lighting. Started hardening off plan.",
-        content: `
-            <h3>Germination Success!</h3>
-            <p>After 7 days, I have sprouts! The Cherokee Purple were first (day 5), followed by San Marzano (day 6) and Sungold (day 7). Germination rate is about 85% - pretty good!</p>
-            
-            <h3>What Changed</h3>
-            <ul>
-                <li>Removed humidity domes once seedlings emerged</li>
-                <li>Lowered heat mat temperature to 70°F</li>
-                <li>Raised grow lights to 4 inches above seedlings</li>
-                <li>Started bottom watering to prevent damping off</li>
-            </ul>
-            
-            <h3>Observations</h3>
-            <p>Seedlings are looking healthy with strong green cotyledons (seed leaves). No signs of stretching, which means the light intensity is good. Keeping a close eye on moisture levels - the coco coir mix drains well but I need to water every other day.</p>
-            
-            <h3>Planning Ahead</h3>
-            <p>Started researching hardening off schedules. In about 4 weeks, I'll need to gradually introduce these babies to outdoor conditions before transplanting.</p>
-        `,
-        tags: ["Tomatoes", "Germination", "Seedling Care"]
-    },
-    {
-        week: 3,
-        date: "March 11, 2025",
-        title: "True Leaves Appearing",
-        summary: "First true leaves are showing! Started diluted feeding schedule. Planning spring garden layout.",
-        content: `
-            <h3>Growth Update</h3>
-            <p>The seedlings are getting their first set of true leaves (the ones that look like actual tomato leaves, not the round seed leaves). This is an exciting milestone!</p>
-            
-            <h3>Feeding Schedule Started</h3>
-            <p>Began feeding with diluted liquid fertilizer (1/4 strength) once a week. The worm castings in the soil mix provided nutrients for the first 2-3 weeks, but now the plants need more.</p>
-            
-            <h3>Garden Planning</h3>
-            <p>Spent time planning the outdoor garden layout. I have a 10x10 raised bed and need to figure out spacing:</p>
-            <ul>
-                <li>Tomatoes: 24-36 inches apart (need to set up cages/stakes)</li>
-                <li>Companion plants: Planning to add basil between tomatoes</li>
-                <li>Succession planting: Making notes for beans and cucumbers to plant later</li>
-            </ul>
-            
-            <h3>Weather Watch</h3>
-            <p>Last frost date for Zone 7A is typically April 15-20. That's about 5 weeks away - perfect timing for these seedlings!</p>
-        `,
-        tags: ["Tomatoes", "Fertilizing", "Garden Planning"]
     }
 ];
 
