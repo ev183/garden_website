@@ -111,8 +111,8 @@ function renderLessonCards() {
     const lessonsContainer = document.getElementById('lessons-entries');
     lessonsContainer.innerHTML = '';
     
-    lessonsData.forEach(lesson => {
-        const card = createLessonCard(lesson);
+    lessonsData.forEach((lesson, index) => {
+        const card = createLessonCard(lesson, index + 1);
         lessonsContainer.appendChild(card);
     });
 }
@@ -121,11 +121,12 @@ function renderLessonCards() {
 // Create Lesson Card
 // ===========================
 
-function createLessonCard(lesson) {
+function createLessonCard(lesson, number) {
     const card = document.createElement('div');
     card.className = 'lesson-card';
     
     card.innerHTML = `
+        <div class="lesson-number">${number}</div>
         <div class="lesson-title">${lesson.title}</div>
         <div class="lesson-content">${lesson.content}</div>
     `;
