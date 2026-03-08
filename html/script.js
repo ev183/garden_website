@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStats();
     setupEventListeners();
     setupSmoothScrolling();
+    setupScrollHighlighting();
 });
 
 // ===========================
@@ -204,6 +205,44 @@ function updateActiveNav(href) {
             link.classList.add('active');
         }
     });
+}
+
+// ===========================
+// Scroll-Based Navigation Highlighting
+// ===========================
+
+function setupScrollHighlighting() {
+    // Apply initial highlighting on page load
+    highlightActiveSection();
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', highlightActiveSection, { passive: true });
+}
+
+function highlightActiveSection() {
+    const sections = [
+        { id: 'hero', navHref: '#home' },
+        { id: 'weeks', navHref: '#weeks' }
+    ];
+    
+    let activeSection = null;
+    
+    // Find which section is currently in view
+    sections.forEach(section => {
+        const element = document.getElementById(section.id);
+        if (element) {
+            const rect = element.getBoundingClientRect();
+            // Check if section is in viewport (top of section is visible)
+            if (rect.top <= window.innerHeight / 2 && rect.bottom > 0) {
+                activeSection = section.navHref;
+            }
+        }
+    });
+    
+    // Update active nav link
+    if (activeSection) {
+        updateActiveNav(activeSection);
+    }
 }
 
 // ===========================

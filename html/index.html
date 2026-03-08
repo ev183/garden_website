@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for character encoding and responsive design -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Garden Journal | Zone 7A</title>
+    <!-- Link to external stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Header section with title and navigation -->
     <header>
         <div class="container">
+            <!-- Logo and title -->
             <div class="header-content" style="text-align: center;">
                 <h1>🌱 My Garden Journal 🌱</h1>
                 <p class="subtitle">Growing in Zone 7A</p>
             </div>
+            <!-- Navigation menu -->
             <nav>
                 <ul>
                     <li><a href="#home" class="active">Home</a></li>
@@ -22,7 +27,9 @@
         </div>
     </header>
 
+    <!-- Main content area -->
     <main>
+        <!-- Hero section with welcome message -->
         <section id="hero" class="hero">
             <div class="container">
                 <h2>Welcome to My Garden</h2>
@@ -30,11 +37,12 @@
             </div>
         </section>
 
+        <!-- Weekly journal entries section -->
         <section id="weeks" class="weeks-section">
             <div class="container">
                 <h2 class="section-title">Weekly Journal</h2>
                 
-                <!-- Week entries will be dynamically inserted here -->
+                <!-- Container for week entries populated by JavaScript -->
                 <div id="week-entries" class="week-grid">
                     <!-- JavaScript will populate this -->
                 </div>
@@ -42,22 +50,25 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 My Garden Journal. Growing things, one week at a time. 🌿</p>
+            <p>&copy; </p>
         </div>
     </footer>
 
-    <!-- Modal for week details -->
+    <!-- Modal popup for displaying week details -->
     <div id="week-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
+            <!-- Modal body for week details populated by JavaScript -->
             <div id="modal-body">
                 <!-- Week details will be inserted here -->
             </div>
         </div>
     </div>
 
+    <!-- Link to JavaScript file for interactivity -->
     <script src="script.js"></script>
 </body>
 </html>
