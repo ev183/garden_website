@@ -126,15 +126,6 @@ function renderWeekCards() {
         const card = createWeekCard(week);
         weekEntriesContainer.appendChild(card);
     });
-    
-    // Add fade-in animation
-    setTimeout(() => {
-        document.querySelectorAll('.week-card').forEach((card, index) => {
-            setTimeout(() => {
-                card.classList.add('fade-in');
-            }, index * 100);
-        });
-    }, 100);
 }
 
 // ===========================
@@ -144,7 +135,6 @@ function renderWeekCards() {
 function createWeekCard(week) {
     const card = document.createElement('div');
     card.className = 'week-card';
-    card.style.opacity = '0';
     
     card.innerHTML = `
         <div class="week-header">
