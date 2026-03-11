@@ -3,7 +3,7 @@
 ## Overview
 This is a **monolithic static website** built with HTML/CSS/JavaScript and served via Nginx in a Docker container. I chose a simple architecture to focus on DevOps practices like infrastructure automation, containerization, and CI/CD pipelines. 
 > [!NOTE]
-> This could certainly be done with a simpler (and cheaper!!) setup but wanted to dive into more advanced devops practices.
+> This could certainly be done with a simpler (and cheaper!!) setup ;ike S3+CloudFront I but wanted to dive into more advanced devops practices.
 
 ## Website design
 Majority of the frontend code was produced via Claude Code. I update weekly with information from my garden.
@@ -30,4 +30,9 @@ Nothing special about it. Just a logical container for my Service/its tasks. Not
 I chose to create an ECS Service running in Fargate mode to explore a fully serverless setup + only pay for actual task usage instead of paying for EC2 instances.
 
 ### ECS Task Definition
-The task is designed to run on a service with a fargate launch type. The task definition is set to use the latest image in my ECR repo. A task's specs are 0.25 vCPU and 512 mb of RAM
+The task is designed to run on a service with a fargate launch type. The task definition is set to use the latest image in my ECR repo. A task's specs are 0.25 vCPU and 512 mb of RAM.
+
+## To-Do (maybe)
+- Create some sort of testing in my CI/CD pipeline. Tests must pass before proceeding with the deployment
+- Have ECS logs go to CloudWatch (and then maybe Grafana?)
+- Start using tfsec to analyze my IaC code for gaps/risks
