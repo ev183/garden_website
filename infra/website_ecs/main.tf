@@ -60,10 +60,12 @@ module "ecs_service" {
 }
 
 locals {
+  # Create the VPC
   vpc = {
     vpc_name = "garden-website-vpc"
     vpc_cidr = "10.0.0.0/16"
     tags     = { Environment = "dev" }
+    # Define subnets with public and private subnets in different AZs
     subnets = {
       public-a = {
         cidr_block              = "10.0.8.0/24"
@@ -88,6 +90,7 @@ locals {
     }
   }
 
+  # Create the ECS cluster
   ecs_cluster = {
     name = "garden-website-ecs-cluster"
     tags = { Environment = "dev" }
