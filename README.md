@@ -1,7 +1,12 @@
 # Website for garden hosted on ECS - Fargate
 
+## Overview
+This is a **monolithic static website** built with HTML/CSS/JavaScript and served via Nginx in a Docker container. I chose a simple architecture to focus on DevOps practices like infrastructure automation, containerization, and CI/CD pipelines. 
+> [!NOTE]
+> This could certainly be done with a simpler setup but wanted to dive into more advanced devops practices.
+
 ## Website design
-Majority of the frontend code was produced via Claude Code. I update weekly with information from my garden
+Majority of the frontend code was produced via Claude Code. I update weekly with information from my garden.
 
 ## Architecture
 ### CI/CD Workflow
